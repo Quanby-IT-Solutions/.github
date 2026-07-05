@@ -28,6 +28,7 @@ concurrency:
 jobs:
   changes:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     outputs:
       web: ${{ steps.filter.outputs.web }}
     steps:
@@ -46,6 +47,7 @@ jobs:
 
   verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -84,6 +86,7 @@ jobs:
     needs: [changes]
     if: needs.changes.outputs.web == 'true' || inputs.run-e2e
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -109,6 +112,7 @@ jobs:
     if: always()
     needs: [verify, e2e]
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - run: |
           echo "verify: ${{ needs.verify.result }}"
